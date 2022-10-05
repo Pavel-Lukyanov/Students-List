@@ -58,6 +58,10 @@ body {
     display: inline-block;
   }
 
+  .form__warning.active-date {
+    display: inline-block;
+  }
+
   .input__container {
     position: relative;
   }

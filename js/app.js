@@ -2,12 +2,12 @@ const root = document.getElementById('root');
 let headApp = document.createElement('h1');
 
 let arr = [
-    { name: 'Павел', surname: 'Лукьянов', patronymic: 'Александрович', startEd: new Date(2015, 09, 01), fac: 'УТС', birthday: new Date(1996, 04, 21) },
-    { name: 'Денис', surname: 'Сахаров', patronymic: 'Викторович', startEd: new Date(2020, 12, 11), fac: 'Программист', birthday: new Date(2000, 08, 29) },
-    { name: 'Игорь', surname: 'Николаев', patronymic: 'Сергеевич', startEd: new Date(2022, 06, 01), fac: 'Физика', birthday: new Date(1990, 01, 11) },
+    { name: 'Павел', surname: 'Лукьянов', patronymic: 'Александрович', startEd: 2015, fac: 'УТС', birthday: new Date(1996, 04, 21) },
+    { name: 'Денис', surname: 'Сахаров', patronymic: 'Викторович', startEd: 2020, fac: 'Программист', birthday: new Date(2000, 08, 29) },
+    { name: 'Игорь', surname: 'Николаев', patronymic: 'Сергеевич', startEd: 2022, fac: 'Физика', birthday: new Date(1990, 01, 11) },
 ]
 
-// Создание формы
+// Создание формы для добавления студента
 function createAddForm() {
     let name = document.createElement('input');
     let surname = document.createElement('input');
@@ -27,7 +27,9 @@ function createAddForm() {
     let spanSurname = document.createElement('span');
     let spanPatronymic = document.createElement('span');
     let spanDateBirth = document.createElement('span');
+    let spanDateBirth2 = document.createElement('span');
     let spanStartLearn = document.createElement('span');
+    let spanStartLearn2 = document.createElement('span');
     let spanFaculty = document.createElement('span');
 
     form.classList.add('form');
@@ -70,17 +72,25 @@ function createAddForm() {
     spanDateBirth.classList.add('form__warning');
     divDateBirth.append(spanDateBirth);
     divDateBirth.classList.add('input__container');
+    spanDateBirth2.classList.add('form__warning');
+    spanDateBirth2.textContent = 'Введите дату в диапазоне от 01.01.1900 до текущей даты';
+    divDateBirth.append(spanDateBirth2);
+    divDateBirth.classList.add('input__container');
+    divDateBirth.append(spanDateBirth2);
     divDateBirth.append(dateBirth);
 
-    startLearn.type = 'date';
+    startLearn.type = 'number';
     startLearn.name = 'startLearn';
     startLearn.classList.add('form-control');
     divStartLearn.textContent = 'Начало обучения';
     spanStartLearn.textContent = 'Заполните поле "Начало обучения"';
     spanStartLearn.classList.add('form__warning');
     divStartLearn.append(startLearn);
-    divStartLearn.append(spanStartLearn);
     divStartLearn.classList.add('input__container');
+    spanStartLearn2.textContent = 'Введите дату в диапазоне от 2000-го года до текущего года';
+    spanStartLearn2.classList.add('form__warning');
+    divStartLearn.append(spanStartLearn);
+    divStartLearn.append(spanStartLearn2);
     divStartLearn.append(startLearn);
 
     faculty.type = 'text';
@@ -117,18 +127,19 @@ function addStudents(event) {
     let startLearn = document.querySelector('input[name=startLearn]');
     let faculty = document.querySelector('input[name=faculty]');
 
-
     let divName = name.previousElementSibling;
     let divSurname = surname.previousElementSibling;
     let divPatronymic = patronymic.previousElementSibling;
-    let divDateBirth = dateBirth.previousElementSibling;
-    let divStartLearn = startLearn.previousElementSibling;
+    let divDateBirth = dateBirth.previousElementSibling.previousElementSibling;
+    let divDateBirth2 = dateBirth.previousElementSibling;
+    let divStartLearn = startLearn.previousElementSibling.previousElementSibling;
+    let divStartLearn2 = startLearn.previousElementSibling;
     let divFaculty = faculty.previousElementSibling;
 
     event.preventDefault();
 
-    let ch = 0;
     //Валидация формы
+    let ch = 0;
     if (name.value == '') {
         divName.classList.add('active');
     } else {
@@ -147,17 +158,28 @@ function addStudents(event) {
         divPatronymic.classList.remove('active');
         ch++;
     }
-    if (dateBirth.value == '' || (new Date(dateBirth.value) <= new Date(1900, 00, 01)) || (new Date(dateBirth.value) > new Date())) {
+    if (dateBirth.value == '') {
         divDateBirth.classList.add('active');
     } else {
         divDateBirth.classList.remove('active');
         ch++;
     }
-    if (startLearn.value == '' || (new Date(startLearn.value) <= new Date(2000, 00, 01)) || (new Date(startLearn.value) > new Date())) {
+    if ((new Date(dateBirth.value) <= new Date(1900, 00, 01)) || (new Date(dateBirth.value) > new Date())) {
+        divDateBirth2.classList.add('active-date');
+    } else {
+        divDateBirth2.classList.remove('active-date');
+        ch++;
+    }
+    if (startLearn.value == '') {
         divStartLearn.classList.add('active');
     } else {
         divStartLearn.classList.remove('active');
-        ch++;
+        if (+startLearn.value < 2000 || +startLearn.value > new Date().getFullYear()) {
+            divStartLearn2.classList.add('active-date');
+        } else {
+            divStartLearn2.classList.remove('active-date');
+            ch++;
+        }
     }
     if (faculty.value == '') {
         divFaculty.classList.add('active');
@@ -166,9 +188,9 @@ function addStudents(event) {
         ch++;
     }
 
-    if(ch == 6) {
+    if (ch == 7) {
         arr.push(
-            { name: name.value, surname: surname.value, patronymic: patronymic.value, startEd: new Date(startLearn.value), fac: faculty.value, birthday: new Date(dateBirth.value) }
+            { name: name.value, surname: surname.value, patronymic: patronymic.value, startEd: +startLearn.value, fac: faculty.value, birthday: new Date(dateBirth.value) }
         )
         document.querySelector('.table').remove();
         name.value = '';
@@ -213,17 +235,16 @@ function createTable() {
 
             //Номер курса
             let courseEd;
-            //console.log(arr[i]['startEd'])
-            if ((new Date().getFullYear() - arr[i]['startEd'].getFullYear()) > 4) {
+            if ((new Date().getFullYear() - arr[i]['startEd']) > 4) {
                 courseEd = '(Закончил)';
-            } else if ((new Date().getFullYear() - arr[i]['startEd'].getFullYear()) <= 0) {
+            } else if ((new Date().getFullYear() - arr[i]['startEd']) <= 0) {
                 courseEd = '(1 курс)';
             } else {
-                courseEd = `(${new Date().getFullYear() - arr[i]['startEd'].getFullYear()} курс)`;
+                courseEd = `(${new Date().getFullYear() - arr[i]['startEd']} курс)`;
             }
 
             //Годы обучения
-            let yearEd = `${arr[i]['startEd'].getFullYear()} - ${arr[i]['startEd'].getFullYear() + 4} `;
+            let yearEd = `${arr[i]['startEd']} - ${arr[i]['startEd'] + 4} `;
 
             //Дата рождения
             let birthday = arr[i]['birthday'].getDate() + '.' + arr[i]['birthday'].getMonth() + '.' + arr[i]['birthday'].getFullYear();
