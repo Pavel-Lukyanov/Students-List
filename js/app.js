@@ -7,6 +7,8 @@ let arr = [
     { name: 'Игорь', surname: 'Николаев', patronymic: 'Сергеевич', startEd: 2022, fac: 'Физика', birthday: new Date(1990, 01, 11) },
 ]
 
+let arrSort = [];
+
 // Создание формы для добавления студента
 function createAddForm() {
     let name = document.createElement('input');
@@ -199,12 +201,12 @@ function addStudents(event) {
         dateBirth.value = '';
         startLearn.value = '';
         faculty.value = '';
-        createTable();
+        createTable(arr);
     }
 }
 
 // Создание таблицы
-function createTable() {
+function createTable(arr) {
     let table = document.createElement('table');
     let thead = document.createElement('thead');
     let thName = document.createElement('th');
@@ -266,7 +268,7 @@ function createTable() {
     }
 }
 
-//Форма сортировки
+//Создание формы сортировки
 function createSort() {
     let formSort = document.createElement('form');
     let headSort = document.createElement('h2');
@@ -278,9 +280,13 @@ function createSort() {
     headSort.textContent = 'Поиск студента';
     formSort.classList.add('form-control', 'form__sort');
     inputFio.placeholder = 'ФИО студента';
+    inputFio.dataset.sort = 'fio';
     inputFac.placeholder = 'Факультет';
+    inputFac.dataset.sort = 'fac';
     inputStartEd.placeholder = 'Год начала обучения';
+    inputStartEd.dataset.sort = 'startEd';
     inputEndEd.placeholder = 'Год окончания обучения';
+    inputEndEd.dataset.sort = 'endEd';
     inputFio.classList.add('form-control');
     inputFac.classList.add('form-control');
     inputStartEd.classList.add('form-control');
@@ -292,6 +298,58 @@ function createSort() {
     formSort.append(inputStartEd);
     formSort.append(inputEndEd);
     root.prepend(formSort);
+    sort(arr);
+}
+
+//Сортировка
+function sort() {
+    let sorts = document.querySelectorAll('input[data-sort]');
+    sorts.forEach(e => {
+        e.addEventListener('input', function () {
+            if (this.dataset.sort == 'fio') {
+                console.log('fio');
+            }
+            if (this.dataset.sort === 'fac') {
+                arr.forEach(el => {
+                    if (this.value.includes(el['fac']) /* == (el['fac']) */) {
+                        document.querySelector('.table').remove();
+                        arrSort.push(el);
+                        createTable(arrSort);
+                    }
+                })
+            } else {
+                arrSort = [];
+                document.querySelector('.table').remove();
+                createTable(arr);
+            }
+            if (this.dataset.sort == 'startEd') {
+                arr.forEach(el => {
+                    if (+this.value == (el['startEd'])) {
+                        document.querySelector('.table').remove();
+                        arrSort.push(el);
+                        createTable(arrSort);
+                    }
+                })
+            } else {
+                arrSort = [];
+                document.querySelector('.table').remove();
+                createTable(arr);
+            }
+            if (this.dataset.sort == 'endEd') {
+                arr.forEach(el => {
+                    if (+this.value == (el['startEd'] + 4)) {
+                        document.querySelector('.table').remove();
+                        arrSort.push(el);
+                        createTable(arrSort);
+                    }
+                })
+            } else {
+                arrSort = [];
+                document.querySelector('.table').remove();
+                createTable(arr);
+            }
+        });
+    })
 }
 
 //Показать форму добавления студента
@@ -309,11 +367,10 @@ function showSort() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-
     headApp.textContent = 'Список студентов';
     headApp.classList.add('title');
     root.append(headApp);
-    createTable();
+    createTable(arr);
     let btnShowForm = document.createElement('button');
     btnShowForm.classList.add('btn', 'btn-primary');
     btnShowForm.textContent = 'Добавить студента';
