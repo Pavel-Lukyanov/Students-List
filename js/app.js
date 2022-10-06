@@ -306,48 +306,95 @@ function sort() {
     let sorts = document.querySelectorAll('input[data-sort]');
     sorts.forEach(e => {
         e.addEventListener('input', function () {
-            if (this.dataset.sort == 'fio') {
+
+            switch (this.dataset.sort) {
+                case 'fio': console.log('fio');
+                    break;
+                case 'fac':
+                    arr.forEach(el => {
+                        if (this.value.includes(el['fac'])) {
+                            document.querySelector('.table').remove();
+                            arrSort.push(el);
+                            createTable(arrSort);
+                        } else {
+                            arrSort = [];
+                            document.querySelector('.table').remove();
+                            createTable(arr);
+                            console.log('fac');
+                        }
+                    })
+                    break;
+                case 'startEd':
+                    arr.forEach(el => {
+                        if (+this.value == (el['startEd'])) {
+                            document.querySelector('.table').remove();
+                            arrSort.push(el);
+                            createTable(arrSort);
+                        } else {
+                            arrSort = [];
+                            document.querySelector('.table').remove();
+                            createTable(arr);
+                            console.log('startEd');
+                        }
+                    })
+                    break;
+                case 'endEd':
+                    arr.forEach(el => {
+                        if (+this.value == (el['startEd'] + 4)) {
+                            document.querySelector('.table').remove();
+                            arrSort.push(el);
+                            createTable(arrSort);
+                        } else {
+                            arrSort = [];
+                            document.querySelector('.table').remove();
+                            createTable(arr);
+                            console.log('endEd');
+                        }
+                    })
+                    break;
+            }
+
+
+            /* if (this.dataset.sort == 'fio') {
                 console.log('fio');
             }
             if (this.dataset.sort === 'fac') {
                 arr.forEach(el => {
-                    if (this.value.includes(el['fac']) /* == (el['fac']) */) {
+                    if (this.value.includes(el['fac'])) {
                         document.querySelector('.table').remove();
                         arrSort.push(el);
                         createTable(arrSort);
+                    } else {
+                        arrSort = [];
+                        document.querySelector('.table').remove();
+                        createTable(arr);
                     }
                 })
-            } else {
-                arrSort = [];
-                document.querySelector('.table').remove();
-                createTable(arr);
-            }
-            if (this.dataset.sort == 'startEd') {
+            } else if (this.dataset.sort == 'startEd') {
                 arr.forEach(el => {
                     if (+this.value == (el['startEd'])) {
                         document.querySelector('.table').remove();
                         arrSort.push(el);
                         createTable(arrSort);
+                    } else {
+                        arrSort = [];
+                        document.querySelector('.table').remove();
+                        createTable(arr);
                     }
                 })
-            } else {
-                arrSort = [];
-                document.querySelector('.table').remove();
-                createTable(arr);
-            }
-            if (this.dataset.sort == 'endEd') {
+            } else if (this.dataset.sort == 'endEd') {
                 arr.forEach(el => {
                     if (+this.value == (el['startEd'] + 4)) {
                         document.querySelector('.table').remove();
                         arrSort.push(el);
                         createTable(arrSort);
+                    } else {
+                        arrSort = [];
+                        document.querySelector('.table').remove();
+                        createTable(arr);
                     }
                 })
-            } else {
-                arrSort = [];
-                document.querySelector('.table').remove();
-                createTable(arr);
-            }
+            } */
         });
     })
 }
