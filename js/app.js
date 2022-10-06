@@ -221,6 +221,16 @@ function createTable(arr) {
     thAge.textContent = 'Дата рождения и возраст';
     thEducation.textContent = 'Годы обучения и номер курса';
 
+    thName.classList.add('thead');
+    thFaculty.classList.add('thead');
+    thAge.classList.add('thead');
+    thEducation.classList.add('thead');
+
+    thName.dataset.sort = 'name';
+    thFaculty.dataset.sort = 'fac';
+    thAge.dataset.sort = 'age';
+    thEducation.dataset.sort = 'edu';
+
     thead.append(thName);
     thead.append(thFaculty);
     thead.append(thAge);
@@ -267,6 +277,12 @@ function createTable(arr) {
             headApp.insertAdjacentElement('afterEnd', table);
         }
     }
+
+    //Сортировка по возрастанию
+    let sortTables = document.querySelectorAll('.thead');
+    sortTables.forEach(el => {
+        el.addEventListener('click', sortHead);
+    })
 }
 
 //Создание формы сортировки
@@ -302,7 +318,7 @@ function createSort() {
     sort(arr);
 }
 
-//Сортировка
+//Сортировка через форму
 function sort() {
     let sorts = document.querySelectorAll('input[data-sort]');
     sorts.forEach(e => {
@@ -378,6 +394,36 @@ function sort() {
     })
 }
 
+//Сортировка при клике на заголовок таблицы
+function sortHead() {
+    switch (this.dataset.sort) {
+        case 'name':
+            const name = arr.sort(function (a, b) {
+                if (a.surname.toLowerCase() + a.name.toLowerCase() + a.patronymic.toLowerCase() < b.surname.toLowerCase() + b.name.toLowerCase() + b.patronymic.toLowerCase()) return -1;
+            });
+            document.querySelector('.table').remove();
+            createTable(name);
+            break;
+        case 'fac':
+            const fac = arr.sort(function (a, b) {
+                if (a.fac.toLowerCase() < b.fac.toLowerCase()) return -1;
+            });
+            document.querySelector('.table').remove();
+            createTable(fac);
+            break;
+        case 'age':
+            const age = arr.sort((x, y) => y.birthday - x.birthday);
+            document.querySelector('.table').remove();
+            createTable(age);
+            break;
+        case 'edu':
+            const edu = arr.sort((x, y) => y.startEd - x.startEd);
+            document.querySelector('.table').remove();
+            createTable(edu);
+            break;
+    }
+}
+
 //Показать форму добавления студента
 function showAddForm() {
     createAddForm();
@@ -405,6 +451,7 @@ document.addEventListener('DOMContentLoaded', function () {
     btnShowSort.textContent = 'Поиск';
     root.append(btnShowForm);
     root.append(btnShowSort);
+
 
     //Показать форму добавления студента
     btnShowForm.addEventListener('click', showAddForm);
