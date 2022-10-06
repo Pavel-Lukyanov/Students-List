@@ -5,6 +5,7 @@ let arr = [
     { name: 'Павел', surname: 'Лукьянов', patronymic: 'Александрович', startEd: 2015, fac: 'УТС', birthday: new Date(1996, 04, 21) },
     { name: 'Денис', surname: 'Сахаров', patronymic: 'Викторович', startEd: 2020, fac: 'Программист', birthday: new Date(2000, 08, 29) },
     { name: 'Игорь', surname: 'Николаев', patronymic: 'Сергеевич', startEd: 2022, fac: 'Физика', birthday: new Date(1990, 01, 11) },
+    { name: 'Владимир', surname: 'Медведев', patronymic: 'Игоревич', startEd: 2005, fac: 'Физическая культура', birthday: new Date(1970, 11, 18) },
 ]
 
 let arrSort = [];
@@ -306,95 +307,73 @@ function sort() {
     let sorts = document.querySelectorAll('input[data-sort]');
     sorts.forEach(e => {
         e.addEventListener('input', function () {
-
             switch (this.dataset.sort) {
-                case 'fio': console.log('fio');
+                case 'fio':
+                    const fio = arr.filter(man => (man['surname'] + ' ' + man['name'] + ' ' + man['patronymic']).toLowerCase().includes(this.value.toLowerCase()));
+                    if (fio.length > 0) {
+                        if (document.querySelector('.table')) {
+                            document.querySelector('.table').remove();
+                            createTable(fio);
+                        } else {
+                            createTable(fio);
+                        }
+                    } else if (fio.length == 0 && this.value.length > 0) {
+                        if (document.querySelector('.table')) {
+                            document.querySelector('.table').remove();
+                        }
+                    } else {
+                        if (document.querySelector('.table')) {
+                            document.querySelector('.table').remove();
+                            createTable(arr);
+                        } else {
+                            createTable(arr);
+                        }
+                    }
                     break;
                 case 'fac':
-                    arr.forEach(el => {
-                        if (this.value.includes(el['fac'])) {
+                    const fac = arr.filter(man => (man['fac']).toLowerCase().includes(this.value.toLowerCase()));
+                    console.log(fac);
+                    if (fac.length > 0) {
+                        if (document.querySelector('.table')) {
                             document.querySelector('.table').remove();
-                            arrSort.push(el);
-                            createTable(arrSort);
+                            createTable(fac);
                         } else {
-                            arrSort = [];
+                            createTable(fac);
+                        }
+                    } else if (fac.length == 0 && this.value.length > 0) {
+                        if (document.querySelector('.table')) {
+                            document.querySelector('.table').remove();
+                        }
+                    } else {
+                        if (document.querySelector('.table')) {
                             document.querySelector('.table').remove();
                             createTable(arr);
-                            console.log('fac');
+                        } else {
+                            createTable(arr);
                         }
-                    })
+                    }
                     break;
                 case 'startEd':
-                    arr.forEach(el => {
-                        if (+this.value == (el['startEd'])) {
-                            document.querySelector('.table').remove();
-                            arrSort.push(el);
-                            createTable(arrSort);
-                        } else {
-                            arrSort = [];
-                            document.querySelector('.table').remove();
-                            createTable(arr);
-                            console.log('startEd');
-                        }
-                    })
+                    const startEd = arr.filter(man => man['startEd'] == (+this.value));
+                    if (startEd.length > 0) {
+                        document.querySelector('.table').remove();
+                        createTable(startEd);
+                    } else {
+                        document.querySelector('.table').remove();
+                        createTable(arr);
+                    }
                     break;
                 case 'endEd':
-                    arr.forEach(el => {
-                        if (+this.value == (el['startEd'] + 4)) {
-                            document.querySelector('.table').remove();
-                            arrSort.push(el);
-                            createTable(arrSort);
-                        } else {
-                            arrSort = [];
-                            document.querySelector('.table').remove();
-                            createTable(arr);
-                            console.log('endEd');
-                        }
-                    })
+                    const endEd = arr.filter(man => man['startEd'] + 4 == (+this.value));
+                    if (endEd.length > 0) {
+                        document.querySelector('.table').remove();
+                        createTable(endEd);
+                    } else {
+                        document.querySelector('.table').remove();
+                        createTable(arr);
+                    }
                     break;
             }
-
-
-            /* if (this.dataset.sort == 'fio') {
-                console.log('fio');
-            }
-            if (this.dataset.sort === 'fac') {
-                arr.forEach(el => {
-                    if (this.value.includes(el['fac'])) {
-                        document.querySelector('.table').remove();
-                        arrSort.push(el);
-                        createTable(arrSort);
-                    } else {
-                        arrSort = [];
-                        document.querySelector('.table').remove();
-                        createTable(arr);
-                    }
-                })
-            } else if (this.dataset.sort == 'startEd') {
-                arr.forEach(el => {
-                    if (+this.value == (el['startEd'])) {
-                        document.querySelector('.table').remove();
-                        arrSort.push(el);
-                        createTable(arrSort);
-                    } else {
-                        arrSort = [];
-                        document.querySelector('.table').remove();
-                        createTable(arr);
-                    }
-                })
-            } else if (this.dataset.sort == 'endEd') {
-                arr.forEach(el => {
-                    if (+this.value == (el['startEd'] + 4)) {
-                        document.querySelector('.table').remove();
-                        arrSort.push(el);
-                        createTable(arrSort);
-                    } else {
-                        arrSort = [];
-                        document.querySelector('.table').remove();
-                        createTable(arr);
-                    }
-                })
-            } */
         });
     })
 }
