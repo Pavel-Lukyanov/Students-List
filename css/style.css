@@ -65,3 +65,13 @@ body {
   .input__container {
     position: relative;
   }
+
+  .thead:hover {
+    opacity: 0.6;
+  }
+
+  .thead {
+    cursor: pointer;
+    transition: 0.3s;
+    user-select: none;
+  }
